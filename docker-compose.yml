@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  sd-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sd-studio:latest
+    container_name: stable-diffusion-studio
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./output:/app/output
+      - ./data:/app/data
+      - ./checkpoints:/app/checkpoints
+      - hf_cache:/app/.cache/huggingface
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - HF_HOME=/app/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # Optional: Jupyter notebook server
+  notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sd-studio:latest
+    container_name: sd-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./output:/app/output
+      - ./data:/app/data
+      - hf_cache:/app/.cache/huggingface
+    command: >
+      jupyter notebook
+        --ip=0.0.0.0
+        --port=8888
+        --no-browser
+        --allow-root
+        --NotebookApp.token=''
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - notebook
+
+volumes:
+  hf_cache:
+    driver: local

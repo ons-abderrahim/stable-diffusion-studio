@@ -1,0 +1,32 @@
+# configs/dreambooth_config.yaml
+
+model:
+  id: stabilityai/stable-diffusion-xl-base-1.0
+
+data:
+  instance_data_dir: data/instance/
+  instance_prompt: "a photo of sks dog"
+  class_data_dir: data/class/
+  class_prompt: "a photo of a dog"
+  resolution: 512
+
+training:
+  output_dir: checkpoints/dreambooth/
+  num_train_epochs: 4
+  max_train_steps: null
+  train_batch_size: 1
+  gradient_accumulation_steps: 1
+  gradient_checkpointing: true
+
+  learning_rate: 2.0e-6
+  lr_scheduler: constant
+  lr_warmup_steps: 0
+
+  train_text_encoder: false
+  with_prior_preservation: true
+  prior_loss_weight: 1.0
+  num_class_images: 200
+
+  mixed_precision: fp16
+  use_8bit_adam: false
+  seed: 42

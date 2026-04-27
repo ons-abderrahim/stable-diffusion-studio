@@ -1,0 +1,31 @@
+# configs/generation_default.yaml
+# Default configuration for image generation.
+# Override any value from the CLI or by loading a different config file.
+
+model:
+  id: stabilityai/stable-diffusion-xl-base-1.0
+  dtype: float16          # float16 | bfloat16 | float32
+  device: cuda            # cuda | cpu | mps
+
+generation:
+  num_inference_steps: 30
+  guidance_scale: 7.5
+  height: 1024
+  width: 1024
+  num_images_per_prompt: 1
+  seed: null              # null = random
+
+scheduler:
+  name: dpm++             # dpm++ | euler_a
+  
+optimization:
+  enable_xformers: true
+  enable_attention_slicing: false
+  torch_compile: false
+  cpu_offload: false
+
+output:
+  directory: output/
+  save_grid: true
+  save_individual: false
+  grid_cols: null         # null = auto-inferred
